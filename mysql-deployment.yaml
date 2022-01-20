@@ -34,7 +34,13 @@ spec:
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
-          value: password
+          value: moshiur
+        - name: MYSQL_DATABASE
+          value: dollar_buy_db
+        - name: MYSQL_USER
+          value: moshiur
+        - name: MYSQL_PASSWORD
+          value: moshiur
         ports:
         - containerPort: 3306
           name: mysql

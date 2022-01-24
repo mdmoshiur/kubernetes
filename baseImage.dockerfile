@@ -1,41 +1,27 @@
 FROM php:8.0.7-fpm
 
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends \
-    curl \
-    libmemcached-dev \
-    libz-dev \
+RUN apt-get update && apt-get install -y \
     libpq-dev \
+    libmcrypt-dev \
+    curl \
+    jq \
+    xvfb libfontconfig wkhtmltopdf \
     libjpeg-dev \
     libpng-dev \
-    libfreetype6-dev \
-    libssl-dev \
-    libmcrypt-dev \
-    supervisor \
-    nano \
-    zip unzip \
-    libssh2-1-dev \
-    openssl \
-    libxml2-dev \
-    libonig-dev \
-    libcurl4-openssl-dev
+    zlib1g-dev \
+    && docker-php-ext-install -j$(nproc) pdo \
+    && docker-php-ext-install -j$(nproc) pdo_mysql \
+    && docker-php-ext-install -j$(nproc) pdo_pgsql \
+    && docker-php-ext-install  mbstring \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install bcmath
 
 RUN apt-get install -y \
         libzip-dev \
         zip \
   && docker-php-ext-install zip
 
-
-# Install the PHP  extention
-RUN docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd mysqli
-
-#composer setup
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-
-#RUN pecl install -o -f redis \
-#    &&  rm -rf /tmp/pear \
-#    &&  echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+RUN apt-get install nano -y
 
 RUN pecl install redis opcache
 RUN docker-php-ext-enable opcache
